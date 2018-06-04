@@ -48,10 +48,16 @@ function getLauncher(configFile, callback) {
         }
 
         options = options || {};
+		var usedConfig = JSON.parse(JSON.stringify(config));
+		if (options.currentProfile && usedConfig.browsers) {
+			usedConfig.browsers.forEach(function (browser) {
+				delete browser.profile;
+			});
+		}
 
         var version = options.version || options.browser.split('/')[1] || '*',
             name = options.browser.toLowerCase().split('/')[0],
-            runner = run(config, name, version);
+            runner = run(usedConfig, name, version);
 
         if (!runner) {
             // update the list of available browsers and retry
